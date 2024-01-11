@@ -1,0 +1,19 @@
+[window]
+decorations = "None"
+startup_mode = "Maximized"
+option_as_alt = "OnlyRight"
+
+[font]
+normal.family = "MesloLGS NF"
+normal.style = "Regular"
+bold.family = "MesloLGS NF"
+bold.style = "Bold"
+italic.family = "MesloLGS NF"
+italic.style = "Italic"
+bold_italic.family = "MesloLGS NF"
+bold_italic.style = "Bold Italic"
+size = 13
+builtin_box_drawing = false
+
+[selection]
+save_to_clipboard = true
