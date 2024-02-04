@@ -13,6 +13,7 @@ fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -87,7 +88,9 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 export PATH="$HOME/.pyenv/bin:$PATH"
 eval "$(pyenv init --path)"
-eval "$(pyenv virtualenv-init -)"
+if [[ $(uname) == "Darwin" ]]; then
+    eval "$(pyenv virtualenv-init -)"
+fi
 
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
