@@ -7,6 +7,8 @@ fi
 if [[ $(uname) == "Darwin" ]]; then
   export PATH="/opt/homebrew/bin:$PATH"
   export PATH="/opt/homebrew/sbin:$PATH"
+  alias s=~/scripts/bash/shortcuts.nu
+  alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
 fi
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -113,7 +115,6 @@ export EDITOR='nvim'
 eval $(thefuck --alias)
 alias py=python3
 alias pip="py -m pip"
-alias s="dash ~/scripts/bash/shortcuts.sh"
 alias reload=". ~/.zshrc"
 alias vim=nvim
 alias vi=nvim
