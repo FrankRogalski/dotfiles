@@ -15,7 +15,7 @@ fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$HOME/.local/share/gem/ruby/3.2.0/bin:$PATH"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -89,7 +89,7 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
 if [[ $(uname) == "Darwin" ]]; then
     eval "$(pyenv virtualenv-init -)"
 fi
@@ -99,6 +99,8 @@ eval "$(jenv init -)"
 
 export MANPATH="/usr/local/man:$MANPATH"
 export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 export EDITOR='nvim'
 
 # You may need to manually set your language environment
@@ -120,6 +122,8 @@ alias vim=nvim
 alias vi=nvim
 alias scroll=/Users/frankrogalski/Library/Developer/Xcode/DerivedData/DiscreteScroll-fuqmlrdyuvdzjphjjgbfmemfhvjs/build/Products/Debug/DiscreteScroll.app/Contents/MacOS/DiscreteScroll
 alias wisdom="~/dotfiles/wisdom.nu"
+alias ls=eza
+alias neofetch="echo 'neofetch is dead, use fastfetch instead!' && fastfetch"
 
 if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
   wisdom
