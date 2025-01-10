@@ -2,7 +2,7 @@
 
 let say_options = [
     { |text: string|
-        let cows = (cowsay -l | split row ':').1 | str trim | split row --regex '\s+'
+        let cows = cowsay -l | str trim | split row --regex '\s+'
         let cow = $cows | get (random int 0..<($cows | length))
         $text | cowsay -f $cow | lolcrab
     }
