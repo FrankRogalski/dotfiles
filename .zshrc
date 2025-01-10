@@ -9,6 +9,12 @@ if [[ $(uname) == "Darwin" ]]; then
   export PATH="/opt/homebrew/sbin:$PATH"
   alias s=~/scripts/bash/shortcuts.nu
   alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
+  alias py=python3
+else
+  alias hx=helix
+  alias py=~/.pyenv/versions/3.13.0/bin/python3
+  alias haskell=ghc
+  alias sudo='sudo '
 fi
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -115,7 +121,6 @@ export EDITOR='nvim'
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 eval $(thefuck --alias)
-alias py=python3
 alias pip="py -m pip"
 alias reload=". ~/.zshrc"
 alias vim=nvim
@@ -124,6 +129,8 @@ alias scroll=/Users/frankrogalski/Library/Developer/Xcode/DerivedData/DiscreteSc
 alias wisdom="~/dotfiles/wisdom.nu"
 alias ls=eza
 alias neofetch="echo 'neofetch is dead, use fastfetch instead!' && fastfetch"
+alias zbr="zig build run"
+alias lg=lazygit
 
 if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
   wisdom
