@@ -4,6 +4,10 @@ TERM = "xterm-256color"
 [window]
 decorations = "None"
 startup_mode = "Maximized"
+option_as_alt = "OnlyRight"
+
+[scrolling]
+history = 0
 
 [font]
 normal.family = "MesloLGS NF"

@@ -5,22 +5,29 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 if [[ $(uname) == "Darwin" ]]; then
-  export PATH="/opt/homebrew/sbin:/opt/homebrew/bin:$PATH"
+  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$(brew --prefix)/opt/llvm/bin:$PATH"
+  export LIBRARY_PATH="$LIBRARY_PATH:/opt/local/lib/"
+  export JAVA_HOME="/Users/frankrogalski/Library/Java/JavaVirtualMachines/sapmachine-17.0.11/Contents/Home"
+  fpath+=('/opt/homebrew/share/zsh/site-functions')
   alias s=~/scripts/bash/shortcuts.nu
   alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
   alias py=python3
+  alias claude="py /Applications/claude-engineer/main.py"
+  alias update_claude="(cd /Applications/claude-engineer && git pull)"
+  alias update=~/scripts/bash/bubu/bubu.nu
 else
   alias hx=helix
   alias py=~/.pyenv/versions/3.13.0/bin/python3
   alias haskell=ghc
   alias sudo='sudo '
+  export PATH="$HOME/.cargo/bin:$HOME/.local/share/gem/ruby/3.2.0/bin:$HOME/programms/jdtls/bin:$HOME/.local/bin:$PATH"
 fi
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-export PATH="$HOME/.cargo/bin:$HOME/.local/share/gem/ruby/3.2.0/bin:$HOME/programms/jdtls/bin:$HOME/.local/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -88,13 +95,13 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z brew emoji jira web-search zsh-autosuggestions)
-
+plugins=(git z brew emoji jira web-search zsh-autosuggestions tmux)
+export ZSH_TMUX_AUTOSTART=true
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
 export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
+eval "$(pyenv init --path)"
 if [[ $(uname) == "Darwin" ]]; then
     eval "$(pyenv virtualenv-init -)"
 fi
@@ -133,9 +140,22 @@ alias lg=lazygit
 
 if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
   wisdom
+  if [[ $(uname) == "Darwin" ]]; then
+    update
+  fi
 fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-. "$HOME/.local/bin/env"
+if [[ $(uname) == "Darwin" ]]; then
+  # BEGIN opam configuration
+  # This is useful if you're using opam as it adds:
+  #   - the correct directories to the PATH
+  #   - auto-completion for the opam binary
+  # This section can be safely removed at any time if needed.
+  [[ ! -r '/Users/frankrogalski/.opam/opam-init/init.zsh' ]] || source '/Users/frankrogalski/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
+  # END opam configuration
+else
+  . "$HOME/.local/bin/env"
+fi
