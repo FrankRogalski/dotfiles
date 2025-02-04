@@ -1,3 +1,4 @@
+unsetopt PROMPT_SP
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -139,6 +140,10 @@ alias ls=eza
 alias neofetch="echo 'neofetch is dead, use fastfetch instead!' && fastfetch"
 alias zbr="zig build run"
 alias lg=lazygit
+
+gif2mp4() {
+  ffmpeg -i $1 -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" $2
+}
 
 if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
   wisdom
