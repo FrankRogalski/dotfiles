@@ -22,6 +22,7 @@ else
   alias haskell=ghc
   alias sudo='sudo '
   export PATH="$HOME/.cargo/bin:$HOME/.local/share/gem/ruby/3.2.0/bin:$HOME/programms/jdtls/bin:$HOME/.local/bin:$PATH"
+  alias claude='(cd /home/frank/projects/claude-engineer && uv run ce3.py)'
 fi
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -143,6 +144,10 @@ alias lg=lazygit
 
 gif2mp4() {
   ffmpeg -i $1 -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" $2
+}
+
+datecalc() {
+  py -c "from datetime import datetime as dt, timedelta as td; print($1)"
 }
 
 if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
