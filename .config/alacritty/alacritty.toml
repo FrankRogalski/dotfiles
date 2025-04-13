@@ -6,9 +6,6 @@ decorations = "None"
 startup_mode = "Maximized"
 option_as_alt = "OnlyRight"
 
-[scrolling]
-history = 0
-
 [font]
 normal.family = "MesloLGS NF"
 normal.style = "Regular"
