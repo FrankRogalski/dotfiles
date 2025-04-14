@@ -145,6 +145,7 @@ alias neofetch="echo 'neofetch is dead, use fastfetch instead!' && fastfetch"
 alias zbr="zig build run"
 alias lg=lazygit
 alias mv='mv -i'
+alias hf=hyperfine
 
 gif2mp4() {
   ffmpeg -i $1 -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" $2
