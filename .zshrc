@@ -13,6 +13,7 @@ if [[ $(uname) == "Darwin" ]]; then
   alias s=~/scripts/bash/shortcuts.nu
   alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
   alias py=python3
+  alias steplog='/Users/frankrogalski/privat/python/steplog/main.py 9111 p "`cat ~/steppass.txt`"'
   alias claude="py /Applications/claude-engineer/main.py"
   alias update_claude="(cd /Applications/claude-engineer && git pull)"
   alias update=~/scripts/bash/bubu/bubu.nu
