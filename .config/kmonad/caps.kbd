@@ -1,0 +1,28 @@
+;; caps-esc-ctrl.kbd
+
+(defcfg
+  ;; ** INPUT DEVICE **
+  ;; Find yours with: ls /dev/input/by-path/*-event-kbd
+  input  (device-file "/dev/input/by-path/platform-i8042-serio-0-event-kbd")
+  ;; ** UINPUT SINK **
+  output (uinput-sink "kmonad")
+  ;; let all other keys fall through unchanged
+  fallthrough true
+  ;; allow runtime commands (optional)
+  allow-cmd true
+)
+
+;; Describe only the keys you’ll remap
+(defsrc
+  CapsLock
+)
+
+(defalias
+  ;; tap → Esc ; chord (tap-next-press) → LeftCtrl
+  caps (tap-next-press esc lctrl)
+)
+
+;; Name this layer "default" so kmonad picks it up automatically
+(deflayer default
+  caps
+)
