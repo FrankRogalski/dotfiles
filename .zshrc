@@ -18,6 +18,7 @@ if [[ $(uname) == "Darwin" ]]; then
   alias update_claude="(cd /Applications/claude-engineer && git pull)"
   alias update=~/scripts/bash/bubu/bubu.nu
 else
+  alias update='sudo pacman -Syu && yay -Syu --answerclean All --answerdiff None'
   alias hx=helix
   alias py=~/.pyenv/versions/3.13.0/bin/python3
   alias haskell=ghc
