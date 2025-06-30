@@ -13,10 +13,11 @@ if [[ $(uname) == "Darwin" ]]; then
   alias s=~/scripts/bash/shortcuts.nu
   alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
   alias py=python3
-  alias steplog='/Users/frankrogalski/privat/python/steplog/main.py -p "`cat ~/steppass.txt`"'
+  alias steplog='/Users/frankrogalski/Privat/python/steplog/main.py -p "`cat ~/steppass.txt`"'
   alias claude="py /Applications/claude-engineer/main.py"
   alias update_claude="(cd /Applications/claude-engineer && git pull)"
   alias update=~/scripts/bash/bubu/bubu.nu
+  alias git-diff=~/scripts/bash/diff.nu
 else
   alias update='sudo pacman -Syu && yay -Syu --answerclean All --answerdiff None && cargo install-update -a && rustup update stable && omz update'
   alias hx=helix
@@ -105,11 +106,11 @@ plugins=(git z brew emoji jira web-search zsh-autosuggestions)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init --path)"
-if [[ $(uname) == "Darwin" ]]; then
-    eval "$(pyenv virtualenv-init -)"
-fi
+#export PATH="$HOME/.pyenv/bin:$PATH"
+#eval "$(pyenv init --path)"
+#if [[ $(uname) == "Darwin" ]]; then
+    #eval "$(pyenv virtualenv-init -)"
+#fi
 
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
@@ -159,9 +160,6 @@ datecalc() {
 
 if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
   wisdom
-  if [[ $(uname) == "Darwin" ]]; then
-    update
-  fi
 fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
