@@ -14,9 +14,9 @@ let say_options = [
             ponythink $text err> /dev/null
         }
     }
-    { |text: string| dinosay -r $text | lolcrab }
+    { |text: string| uvx dinosay -r $text | lolcrab }
     { |text: string| yosay ($text | lolcrab) }
-    { |text: string| ricksay }
+    { |text: string| uvx ricksay }
 ]
 
 let choice = random int 0..<($say_options | length)
