@@ -176,5 +176,3 @@ if [[ $(uname) == "Darwin" ]]; then
 else
   . "$HOME/.local/bin/env"
 fi
-
-eval "$(atuin init zsh)"
