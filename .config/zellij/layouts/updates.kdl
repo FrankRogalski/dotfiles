@@ -1,0 +1,33 @@
+layout {
+	tab name="Updates" split_direction="vertical" {
+		pane split_direction="horizontal" {
+			pane {
+				name "brew"
+				command "bash"
+				args "-lc" "echo 'Updating brew' && brew update && echo 'upgrading brew'&& brew upgrade && echo 'cleanup' && brew cleanup --prune=all && echo done"
+			}
+			pane {
+				name "cargo"
+				command "bash"
+				args "-lc" "cargo install-update -a && echo done"
+			}
+		}
+		pane split_direction="horizontal" {
+			pane {
+				name "rust"
+				command "bash"
+				args "-lc" "rustup update stable && echo done"
+			}
+			pane {
+				name "tldr"
+				command "bash"
+				args "-lc" "tldr -u && echo done"
+			}
+		}
+		pane {
+			name "Oh my zsh"
+			command "zsh"
+			args "-ic" "omz update && echo done"
+		}
+	}
+}
