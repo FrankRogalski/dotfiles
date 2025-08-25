@@ -5,7 +5,7 @@ layout {
 			pane {
 				name "brew"
 				command "zsh"
-				args ".updater.sh" "echo 'Updating brew' && brew update && echo 'upgrading brew'&& brew upgrade && echo 'cleanup' && brew cleanup --prune=all"
+				args ".updater.sh" "echo 'Updating brew' && brew update && echo 'upgrading brew' && brew upgrade && echo 'cleanup' && brew cleanup --prune=all"
 				close_on_exit true
 			}
 			pane {
