@@ -4,13 +4,13 @@ layout {
 		pane split_direction="horizontal" {
 			pane {
 				name "brew"
-				command "bash"
+				command "zsh"
 				args ".updater.sh" "echo 'Updating brew' && brew update && echo 'upgrading brew'&& brew upgrade && echo 'cleanup' && brew cleanup --prune=all"
 				close_on_exit true
 			}
 			pane {
 				name "cargo"
-				command "bash"
+				command "zsh"
 				args ".updater.sh" "cargo install-update -a"
 				close_on_exit true
 			}
@@ -18,13 +18,13 @@ layout {
 		pane split_direction="horizontal" {
 			pane {
 				name "rust"
-				command "bash"
+				command "zsh"
 				args ".updater.sh" "rustup update stable"
 				close_on_exit true
 			}
 			pane {
 				name "tldr"
-				command "bash"
+				command "zsh"
 				args ".updater.sh" "tldr -u"
 				close_on_exit true
 			}
