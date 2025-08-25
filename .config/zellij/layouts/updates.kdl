@@ -1,33 +1,39 @@
 layout {
+	cwd "~"
 	tab name="Updates" split_direction="vertical" {
 		pane split_direction="horizontal" {
 			pane {
 				name "brew"
 				command "bash"
-				args "-lc" "echo 'Updating brew' && brew update && echo 'upgrading brew'&& brew upgrade && echo 'cleanup' && brew cleanup --prune=all && echo done"
+				args ".updater.sh" "echo 'Updating brew' && brew update && echo 'upgrading brew'&& brew upgrade && echo 'cleanup' && brew cleanup --prune=all"
+				close_on_exit true
 			}
 			pane {
 				name "cargo"
 				command "bash"
-				args "-lc" "cargo install-update -a && echo done"
+				args ".updater.sh" "cargo install-update -a"
+				close_on_exit true
 			}
 		}
 		pane split_direction="horizontal" {
 			pane {
 				name "rust"
 				command "bash"
-				args "-lc" "rustup update stable && echo done"
+				args ".updater.sh" "rustup update stable"
+				close_on_exit true
 			}
 			pane {
 				name "tldr"
 				command "bash"
-				args "-lc" "tldr -u && echo done"
+				args ".updater.sh" "tldr -u"
+				close_on_exit true
 			}
 		}
 		pane {
 			name "Oh my zsh"
 			command "zsh"
-			args "-ic" "omz update && echo done"
+			args "-i" ".updater.sh" "omz update"
+			close_on_exit true
 		}
 	}
 }
