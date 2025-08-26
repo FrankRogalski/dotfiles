@@ -1,6 +1,6 @@
 eval "$*"
 local s=$?
-if (( s == 0 )); then
+if [ $s -eq 0 ]; then
     echo 'update finished'
     sleep 2
 else
