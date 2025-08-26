@@ -14,7 +14,7 @@ if [[ $(uname) == "Darwin" ]]; then
   alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
   alias py=python3
   alias steplog='/Users/frankrogalski/Privat/python/steplog/main.py -p "`cat ~/steppass.txt`"'
-  alias update='zellij --layout "updates"'
+  alias update='zellij --layout "updates" && echo "Update finished"'
   alias git-diff=~/scripts/bash/diff.nu
 else
   alias update='sudo pacman -Syu && yay -Syu --answerclean All --answerdiff None && cargo install-update -a && rustup update stable && omz update'

@@ -1,5 +1,9 @@
 eval "$*"
 local s=$?
-(( s == 0 )) && exit
-echo "FAILED ($s) — pane stays open"
-exec $SHELL
+if (( s == 0 )); then
+    echo 'update finished'
+    sleep 2
+else
+    echo "FAILED ($s) — pane stays open"
+    exec $SHELL
+fi
