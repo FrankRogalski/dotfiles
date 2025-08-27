@@ -1,5 +1,5 @@
 eval "$*"
-local s=$?
+s=$?
 set -u
 if [ $s -eq 0 ]; then
     echo 'update finished'

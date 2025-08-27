@@ -1,39 +1,47 @@
 layout {
-	cwd "~"
-	tab name="Updates" split_direction="vertical" {
-		pane split_direction="horizontal" {
-			pane {
-				name "brew"
-				command "zsh"
-				args ".updater.sh" "echo 'Updating brew' && brew update && echo 'upgrading brew' && brew upgrade && echo 'brew cleanup' && brew cleanup --prune=all"
-				close_on_exit true
-			}
-			pane {
-				name "cargo"
-				command "zsh"
-				args ".updater.sh" "cargo install-update -a"
-				close_on_exit true
-			}
-		}
-		pane split_direction="horizontal" {
-			pane {
-				name "rust"
-				command "zsh"
-				args ".updater.sh" "rustup update stable"
-				close_on_exit true
-			}
-			pane {
-				name "tldr"
-				command "zsh"
-				args ".updater.sh" "tldr -u"
-				close_on_exit true
-			}
-		}
-		pane {
-			name "Oh my zsh"
-			command "zsh"
-			args "-i" ".updater.sh" "omz update"
-			close_on_exit true
-		}
-	}
+    cwd "~"
+    tab name="Updates" split_direction="vertical" {
+        pane split_direction="horizontal" {
+            pane {
+                name "brew"
+                command "zsh"
+                args ".updater.sh" "echo 'Updating brew' && brew update && echo 'upgrading brew' && brew upgrade && echo 'brew cleanup' && brew cleanup --prune=all"
+                close_on_exit true
+            }
+            pane {
+                name "cargo"
+                command "zsh"
+                args ".updater.sh" "cargo install-update -a"
+                close_on_exit true
+            }
+        }
+        pane split_direction="horizontal" {
+            pane {
+                name "rust"
+                command "zsh"
+                args ".updater.sh" "rustup update stable"
+                close_on_exit true
+            }
+            pane {
+                name "tldr"
+                command "zsh"
+                args ".updater.sh" "tldr -u"
+                close_on_exit true
+            }
+        }
+        pane split_direction="horizontal" {
+            pane {
+                name "Oh my zsh"
+                command "zsh"
+                args "-i" ".updater.sh" "omz update"
+                close_on_exit true
+            }
+            pane {
+                name "Copy bookmarks (Compute bound)"
+                command "zsh"
+                args ".updater.sh" "uv run .copy_bookmarks.py"
+                close_on_exit true
+            }
+        }
+    }
 }

@@ -6,7 +6,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 if [[ $(uname) == "Darwin" ]]; then
-  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$(brew --prefix)/opt/llvm/bin:$PATH"
+  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$PATH"
+  export PATH="$(brew --prefix)/opt/llvm/bin:$PATH"
   export LIBRARY_PATH="$LIBRARY_PATH:/opt/local/lib/"
   export JAVA_HOME="/Users/frankrogalski/Library/Java/JavaVirtualMachines/sapmachine-17.0.11/Contents/Home"
   fpath+=('/opt/homebrew/share/zsh/site-functions')
