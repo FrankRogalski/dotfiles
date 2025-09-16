@@ -14,6 +14,12 @@ layout {
                 args ".updater.sh" "cargo install-update -a"
                 close_on_exit true
             }
+            pane {
+                name "node"
+                command "zsh"
+                args ".updater.sh" "npm update -g"
+                close_on_exit true
+            }
         }
         pane split_direction="horizontal" {
             pane {
@@ -26,6 +32,12 @@ layout {
                 name "tldr"
                 command "zsh"
                 args ".updater.sh" "tldr -u"
+                close_on_exit true
+            }
+            pane {
+                name "ruby"
+                command "zsh"
+                args ".updater.sh" "gem update"
                 close_on_exit true
             }
         }

@@ -5,9 +5,11 @@ unsetopt PROMPT_SP
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+autoload -U colors && colors
 if [[ $(uname) == "Darwin" ]]; then
-  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$PATH"
+  export PATH="/opt/homebrew/opt/perl/bin:$HOME/perl5/bin:$(/opt/homebrew/opt/ruby/bin/ruby -r rubygems -e 'print Gem.bindir'):/opt/homebrew/opt/ruby/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$PATH"
   export PATH="$(brew --prefix)/opt/llvm/bin:$PATH"
+  export PERL5LIB="$HOME/perl5/lib/perl5:$PERL5LIB"
   export LIBRARY_PATH="$LIBRARY_PATH:/opt/local/lib/"
   export JAVA_HOME="/Users/frankrogalski/Library/Java/JavaVirtualMachines/sapmachine-17.0.11/Contents/Home"
   fpath+=('/opt/homebrew/share/zsh/site-functions')
@@ -15,7 +17,14 @@ if [[ $(uname) == "Darwin" ]]; then
   alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
   alias py=python3
   alias steplog='/Users/frankrogalski/Privat/python/steplog/main.py -p "`cat ~/steppass.txt`"'
-  alias update='zellij --layout "updates" && echo "Update finished"'
+  function update() {
+    zellij --layout "updates"
+    for file in ~/*updater.log(.N); do
+      printf '%s==> %s <==%s\n' "$fg_bold[green]" "$file" "$reset_color"
+      cat "$file"
+    done
+    echo "Update finished"
+  }
   alias git-diff=~/scripts/bash/diff.nu
 else
   alias update='sudo pacman -Syu && yay -Syu --answerclean All --answerdiff None && cargo install-update -a && rustup update stable && omz update'
@@ -148,6 +157,9 @@ alias zbr="zig build run"
 alias lg=lazygit
 alias mv='mv -i'
 alias hf=hyperfine
+alias frick=fuck
+alias uvsadd='uv add --script'
+alias ipynb='uvx --with pandas --with openpyxl --with seaborn jupyter lab'
 
 gif2mp4() {
   ffmpeg -i $1 -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" $2
