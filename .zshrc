@@ -19,7 +19,7 @@ if [[ $(uname) == "Darwin" ]]; then
   alias steplog='/Users/frankrogalski/Privat/python/steplog/main.py -p "`cat ~/steppass.txt`"'
   function update() {
     zellij --layout "updates"
-    for file in ~/*updater.log(.N); do
+    for file in ~/dotfiles/logs/*(.N); do
       printf '%s==> %s <==%s\n' "$fg_bold[green]" "$file" "$reset_color"
       cat "$file"
     done

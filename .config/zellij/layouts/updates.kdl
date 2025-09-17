@@ -1,5 +1,5 @@
 layout {
-    cwd "~"
+    cwd "~/dotfiles"
     tab name="Updates" split_direction="vertical" {
         pane split_direction="horizontal" {
             pane {

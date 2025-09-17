@@ -1,12 +1,13 @@
+set -u
 INPUT="$*"
 FILENAME=$(echo "$INPUT" | sed -E 's/[^a-zA-Z]+//g')
-LOGFILE=${LOGFILE:-"$HOME/$FILENAME-updater.log"}
+mkdir -p "$HOME/dotfiles/logs"
+LOGFILE=${LOGFILE:-"$HOME/dotfiles/logs/$FILENAME-updater.log"}
 exec > >(tee "$LOGFILE") 2>&1
 
 eval "$INPUT"
-s=$?
-set -u
-if [ $s -eq 0 ]; then
+STATUS=$?
+if [ $STATUS -eq 0 ]; then
     echo 'update finished'
     sleep 2
 else
