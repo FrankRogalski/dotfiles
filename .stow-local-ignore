@@ -1,5 +1,6 @@
 .git
 README.md
-.wisdom.nu
+wisdom.nu
 .gitignore
 .updater.sh
+logs
