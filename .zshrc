@@ -12,12 +12,20 @@ if [[ $(uname) == "Darwin" ]]; then
   export PERL5LIB="$HOME/perl5/lib/perl5:$PERL5LIB"
   export LIBRARY_PATH="$LIBRARY_PATH:/opt/local/lib/"
   export JAVA_HOME="/Users/frankrogalski/Library/Java/JavaVirtualMachines/sapmachine-17.0.11/Contents/Home"
+  export DISABLE_AUTOUPDATER=1
   fpath+=('/opt/homebrew/share/zsh/site-functions')
   alias s=~/scripts/bash/shortcuts.nu
   alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
   alias py=python3
   alias steplog='/Users/frankrogalski/Privat/python/steplog/main.py -p "`cat ~/steppass.txt`"'
   function update() {
+    if [[ -o rm_star_silent ]]; then
+      rm -f ~/dotfiles/logs/*
+    else
+      setopt rm_star_silent
+      rm -f ~/dotfiles/logs/*
+      unsetopt rm_star_silent
+    fi
     zellij --layout "updates"
     for file in ~/dotfiles/logs/*(.N); do
       printf '%s==> %s <==%s\n' "$fg_bold[green]" "$file" "$reset_color"
