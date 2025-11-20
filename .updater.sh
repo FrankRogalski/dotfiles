@@ -1,5 +1,5 @@
 INPUT="$*"
-FILENAME=$(echo "$INPUT" | sed -E 's/[^a-zA-Z]+//g')
+FILENAME=${INPUT//[^[:alpha:]]/}
 mkdir -p "$HOME/dotfiles/logs"
 LOGFILE=${LOGFILE:-"$HOME/dotfiles/logs/$FILENAME-updater.log"}
 exec > >(tee "$LOGFILE") 2>&1
