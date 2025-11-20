@@ -5,13 +5,26 @@ layout {
             pane {
                 name "brew"
                 command "zsh"
-                args ".updater.sh" "echo 'Updating brew' && brew update && echo 'upgrading brew' && brew upgrade && brew upgrade --cask claude-code && echo 'brew cleanup' && brew cleanup --prune=all"
+                args ".updater.sh" r#"
+                    set -e
+                    echo 'Updating brew'
+                    brew update
+                    echo 'upgrading brew'
+                    brew upgrade
+                    brew upgrade --cask claude-code
+                    echo 'brew cleanup'
+                    brew cleanup --prune=all"#
                 close_on_exit true
             }
             pane {
                 name "cargo"
                 command "zsh"
-                args ".updater.sh" "cargo install-update -a"
+                args ".updater.sh" r#"
+                    export OPENSSL_DIR="$(brew --prefix openssl@3)"
+                    export PKG_CONFIG_PATH="$(brew --prefix libgit2)/lib/pkgconfig:${OPENSSL_DIR}/lib/pkgconfig"
+                    export LIBGIT2_NO_VENDOR=1
+                    export RUSTFLAGS="-C link-arg=-liconv"
+                    cargo install-update -a"#
                 close_on_exit true
             }
             pane {
