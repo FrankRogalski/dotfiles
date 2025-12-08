@@ -7,7 +7,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 autoload -U colors && colors
 if [[ $(uname) == "Darwin" ]]; then
-  export PATH="/opt/homebrew/opt/perl/bin:$HOME/perl5/bin:$(/opt/homebrew/opt/ruby/bin/ruby -r rubygems -e 'print Gem.bindir'):/opt/homebrew/opt/ruby/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$PATH"
+  export PATH="$HOME/.local/bin:$HOME/.nimble/bin:/opt/homebrew/opt/perl/bin:$HOME/perl5/bin:$(/opt/homebrew/opt/ruby/bin/ruby -r rubygems -e 'print Gem.bindir'):/opt/homebrew/opt/ruby/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$PATH"
   export PATH="$(brew --prefix)/opt/llvm/bin:$PATH"
   export PERL5LIB="$HOME/perl5/lib/perl5:$PERL5LIB"
   export LIBRARY_PATH="$LIBRARY_PATH:/opt/local/lib/"
@@ -175,6 +175,20 @@ gif2mp4() {
 
 datecalc() {
   py -c "from datetime import datetime as dt, timedelta as td; print($1)"
+}
+
+is_discrete_scroll_running() {
+    pgrep -x "DiscreteScroll" >/dev/null
+}
+
+stop_discrete_scroll() {
+  if is_discrete_scroll_running; then
+    # Send SIGTERM directly
+    pkill -TERM -x "DiscreteScroll"
+    echo "DiscreteScroll sent SIGTERM."
+  else
+    echo "DiscreteScroll is not running."
+  fi
 }
 
 if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
