@@ -1,0 +1,42 @@
+#!/bin/bash
+exec 2>/tmp/ty-wrapper.log
+
+helix_cwd=$(lsof -a -p $PPID -d cwd -Fn 2>/dev/null | grep '^n' | cut -c2-)
+echo "Helix cwd: $helix_cwd" >&2
+
+last_hx=$(grep -a ";hx " ~/.zsh_history | grep -v "grep" | tail -1 | sed 's/.*;hx //' | awk '{print $1}')
+echo "Found from history: $last_hx" >&2
+
+if [[ -n "$helix_cwd" && -n "$last_hx" ]]; then
+    script_path="$helix_cwd/$last_hx"
+    echo "Trying path: $script_path" >&2
+    
+    if [[ -f "$script_path" ]] && head -20 "$script_path" | grep -q '# /// script'; then
+        echo "Running uv..." >&2
+        
+        # Create temp script with just the header + our command
+        tmp=$(mktemp).py
+        sed -n '/^# \/\/\/ script/,/^# \/\/\/$/p' "$script_path" > "$tmp"
+        echo 'import sys; print(sys.prefix)' >> "$tmp"
+        
+        echo "Temp script contents:" >&2
+        cat "$tmp" >&2
+        
+        VIRTUAL_ENV=$(cd "$helix_cwd" && uv run "$tmp" 2>/dev/null)
+        uv_exit=$?
+        rm "$tmp"
+        
+        echo "uv exit code: $uv_exit" >&2
+        echo "uv output: $VIRTUAL_ENV" >&2
+        
+        if [[ $uv_exit -eq 0 && -d "$VIRTUAL_ENV" ]]; then
+            export VIRTUAL_ENV
+            echo "Exported VIRTUAL_ENV: $VIRTUAL_ENV" >&2
+        else
+            echo "Not exporting VIRTUAL_ENV" >&2
+            unset VIRTUAL_ENV
+        fi
+    fi
+fi
+
+exec ty server

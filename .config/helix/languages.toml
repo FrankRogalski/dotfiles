@@ -1,6 +1,10 @@
 [language-server.rust-analyzer.config.check]
 command = "clippy"
 
+[language-server.ty]
+command = "ty-wrapper"
+args = ["server"]
+
 [[language]]
 name = "python"
 auto-format = true

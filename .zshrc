@@ -118,7 +118,7 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z brew emoji jira web-search zsh-autosuggestions)
+plugins=(git brew emoji jira web-search zsh-autosuggestions)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -152,6 +152,7 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_REDUCE_BLANKS
+setopt INC_APPEND_HISTORY
 eval $(thefuck --alias)
 alias pip="py -m pip"
 alias reload=". ~/.zshrc"
@@ -194,6 +195,8 @@ stop_discrete_scroll() {
 if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
   wisdom
 fi
+
+eval "$(zoxide init zsh)"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
