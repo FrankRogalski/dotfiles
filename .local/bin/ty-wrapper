@@ -1,11 +1,15 @@
 #!/bin/bash
 exec 2>/tmp/ty-wrapper.log
 
+# If already in a venv, just run ty
+if [[ -n "$VIRTUAL_ENV" ]]; then
+    exec ty server
+fi
+
 helix_cwd=$(lsof -a -p $PPID -d cwd -Fn 2>/dev/null | grep '^n' | cut -c2-)
 last_hx=$(grep -a ";hx " ~/.zsh_history | grep -v "grep" | tail -1 | sed 's/.*;hx //' | awk '{print $1}')
 
 if [[ -n "$helix_cwd" && -n "$last_hx" ]]; then
-    # Handle both absolute and relative paths
     if [[ "$last_hx" = /* ]]; then
         script_path="$last_hx"
     else
