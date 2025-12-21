@@ -7,8 +7,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 autoload -U colors && colors
 if [[ $(uname) == "Darwin" ]]; then
-  export PATH="$HOME/.local/bin:$HOME/.nimble/bin:/opt/homebrew/opt/perl/bin:$HOME/perl5/bin:$(/opt/homebrew/opt/ruby/bin/ruby -r rubygems -e 'print Gem.bindir'):/opt/homebrew/opt/ruby/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$PATH"
-  export PATH="$(brew --prefix)/opt/llvm/bin:$PATH"
+  export PATH="$HOME/.local/bin:$HOME/.nimble/bin:/opt/homebrew/opt/perl/bin:$HOME/perl5/bin:/opt/homebrew/lib/ruby/gems/3.4.0/bin:/opt/homebrew/opt/ruby/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$PATH"
+  export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
   export PERL5LIB="$HOME/perl5/lib/perl5:$PERL5LIB"
   export LIBRARY_PATH="$LIBRARY_PATH:/opt/local/lib/"
   export JAVA_HOME="/Users/frankrogalski/Library/Java/JavaVirtualMachines/sapmachine-17.0.11/Contents/Home"
@@ -118,7 +118,10 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git brew emoji jira web-search zsh-autosuggestions)
+# Skip compaudit checks for faster startup
+ZSH_DISABLE_COMPFIX=true
+
+plugins=(git brew jira web-search zsh-autosuggestions)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -128,8 +131,13 @@ source $ZSH/oh-my-zsh.sh
     #eval "$(pyenv virtualenv-init -)"
 #fi
 
+# Lazy load jenv (saves ~200ms)
 export PATH="$HOME/.jenv/bin:$PATH"
-eval "$(jenv init -)"
+jenv() {
+  unfunction jenv
+  eval "$(command jenv init -)"
+  jenv "$@"
+}
 
 export MANPATH="/usr/local/man:$MANPATH"
 export LANG=en_US.UTF-8
@@ -153,7 +161,12 @@ setopt HIST_IGNORE_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
-eval $(thefuck --alias)
+# Lazy load thefuck
+fuck() {
+  unfunction fuck
+  eval $(command thefuck --alias)
+  fuck "$@"
+}
 alias pip="py -m pip"
 alias reload=". ~/.zshrc"
 alias vim=nvim
