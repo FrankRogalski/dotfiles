@@ -5,7 +5,7 @@ def has-cmd [name: string] {
 }
 
 let text = if (has-cmd fortune) {
-    fortune -s | str trim | str replace -r '\s+' ' '
+    fortune -s | str trim | str replace -ra '\s+' ' '
 } else {
     "Wisdom unavailable."
 }
