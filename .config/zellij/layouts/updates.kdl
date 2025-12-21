@@ -64,7 +64,7 @@ layout {
             pane {
                 name "Copy bookmarks (Compute bound)"
                 command "zsh"
-                args ".updater.sh" "uv run .copy_bookmarks.py"
+                args ".updater.sh" "uv run copy_bookmarks.py"
                 close_on_exit true
             }
             pane {
