@@ -1,0 +1,72 @@
+# Starship config - p10k lean style (simplified)
+
+format = """
+$os\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$fill\
+$status\
+$cmd_duration\
+$jobs\
+$python\
+$nodejs\
+$rust\
+$golang\
+$java\
+$ruby\
+$kubernetes\
+$aws\
+$gcloud\
+$azure\
+$time
+$character"""
+
+add_newline = true
+
+[fill]
+symbol = " "
+
+[os]
+disabled = false
+
+[directory]
+truncation_length = 3
+fish_style_pwd_dir_length = 1
+
+[git_branch]
+symbol = " "
+truncation_length = 32
+
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇣${behind_count}⇡${ahead_count}"
+stashed = "*${count}"
+
+[character]
+success_symbol = "[❯](green)"
+error_symbol = "[❯](red)"
+vimcmd_symbol = "[❮](green)"
+
+[status]
+disabled = false
+
+[cmd_duration]
+min_time = 3000
+format = "took [$duration]($style) "
+
+[time]
+disabled = false
+format = "[$time]($style)"
+
+[kubernetes]
+disabled = false
+detect_folders = []
+detect_files = []
+
+[azure]
+disabled = false
