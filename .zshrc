@@ -170,6 +170,38 @@ alias frick=fuck
 alias uvsadd='uv add --script'
 alias ipynb='uvx --with pandas --with openpyxl --with seaborn jupyter lab'
 
+open_origin() {
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Not in a git repo."
+    return 1
+  fi
+
+  local url
+  url=$(git remote get-url origin 2>/dev/null) || {
+    echo "No origin remote."
+    return 1
+  }
+
+  if [[ "$url" == git@*:* ]]; then
+    url=${url/git@/https:\/\/}
+    url=${url/:/\//}
+  fi
+  url=${url%.git}
+
+  local opener
+  if command -v open >/dev/null 2>&1; then
+    opener="open"
+  elif command -v xdg-open >/dev/null 2>&1; then
+    opener="xdg-open"
+  else
+    echo "No opener (open/xdg-open) found."
+    return 1
+  fi
+
+  "$opener" "$url"
+}
+alias open-origin=open_origin
+
 gif2mp4() {
   ffmpeg -i $1 -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" $2
 }
