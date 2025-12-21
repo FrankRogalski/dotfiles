@@ -150,6 +150,13 @@ fi
 
 eval "$(zoxide init zsh)"
 
+# fzf keybindings (Ctrl+T files, Alt+C cd)
+source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+source /opt/homebrew/opt/fzf/shell/completion.zsh
+
+# atuin for history (Ctrl+R, up arrow)
+eval "$(atuin init zsh)"
+
 eval "$(starship init zsh)"
 
 if [[ $(uname) == "Darwin" ]]; then
@@ -157,3 +164,6 @@ if [[ $(uname) == "Darwin" ]]; then
 else
   . "$HOME/.local/bin/env"
 fi
+
+# syntax highlighting (must be at end of .zshrc)
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
