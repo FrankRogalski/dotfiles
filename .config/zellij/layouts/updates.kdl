@@ -70,7 +70,7 @@ layout {
             pane {
                 name "update uv tools"
                 command "zsh"
-                args ".updater.sh" r#"uv tool upgrade "$(uv tool list | rg -o '^\w+')""#
+                args ".updater.sh" r#"echo "$(uv tool list | rg -o '^\w+')" | xargs uv tool upgrade"#
                 close_on_exit true
             }
         }
