@@ -62,9 +62,14 @@ layout {
                 close_on_exit true
             }
             pane {
-                name "Copy bookmarks (Compute bound)"
+                name "Compute bound"
                 command "zsh"
-                args ".updater.sh" "uv run copy_bookmarks.py"
+                args ".updater.sh" r#"
+                    echo 'Copying bookmarks'
+                    uv run copy_bookmarks.py
+                    echo 'deleting old uv cache'
+                    find ~/.cache/uv -type f -mtime +30 -delete
+                    find ~/.cache/uv -type d -empty -delete"#
                 close_on_exit true
             }
             pane {
