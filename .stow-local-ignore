@@ -4,3 +4,5 @@ wisdom.nu
 .gitignore
 .updater.sh
 logs
+copy_bookmarks.py
+.clean-hog.py
