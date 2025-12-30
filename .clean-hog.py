@@ -6,6 +6,7 @@ import sys
 
 TO_CUT = 1_000_000
 path = Path.home() / "mailhog.log"
+tmp_path = path.with_suffix(path.suffix + ".tmp")
 
 try:
     size = path.stat().st_size
@@ -18,7 +19,7 @@ if size <= TO_CUT:
     sys.exit()
 
 with open(path, "rb") as file:
-    file.seek(max(0, size - TO_CUT))
+    file.seek(size - TO_CUT)
     chunk = file.read()
 
 index = chunk.find(b"\n")
@@ -27,7 +28,6 @@ if index < 0:
     sys.exit(1)
 
 trimmed = chunk[index + 1 :]
-tmp_path = path.with_suffix(path.suffix + ".tmp")
 with open(tmp_path, "wb") as file:
     file.write(trimmed)
 os.replace(tmp_path, path)
