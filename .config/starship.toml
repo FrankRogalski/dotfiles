@@ -33,8 +33,8 @@ symbol = " "
 disabled = false
 
 [directory]
-truncation_length = 3
-fish_style_pwd_dir_length = 1
+truncation_length = 8
+truncate_to_repo = false
 
 [git_branch]
 symbol = " "
