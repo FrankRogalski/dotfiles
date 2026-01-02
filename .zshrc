@@ -12,7 +12,7 @@ if [[ $(uname) == "Darwin" ]]; then
   alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
   alias py=python3
   alias steplog='/Users/frankrogalski/Privat/python/steplog/main.py -p "`cat ~/steppass.txt`"'
-  function update() {
+  function _delete_logs() {
     if [[ -o rm_star_silent ]]; then
       rm -f ~/dotfiles/logs/*
     else
@@ -20,11 +20,15 @@ if [[ $(uname) == "Darwin" ]]; then
       rm -f ~/dotfiles/logs/*
       unsetopt rm_star_silent
     fi
+  }
+  function update() {
+    _delete_logs
     zellij --layout "updates"
     for file in ~/dotfiles/logs/*(.N); do
       printf '%s==> %s <==%s\n' "$fg_bold[green]" "$file" "$reset_color"
       cat "$file"
     done
+    _delete_logs
     echo "Update finished"
   }
   alias git-diff=~/scripts/bash/diff.nu
@@ -149,15 +153,12 @@ if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
 fi
 
 eval "$(zoxide init zsh)"
+eval "$(atuin init zsh)"
+eval "$(starship init zsh)"
 
 # fzf keybindings (Ctrl+T files, Alt+C cd)
 source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
 source /opt/homebrew/opt/fzf/shell/completion.zsh
-
-# atuin for history (Ctrl+R, up arrow)
-eval "$(atuin init zsh)"
-
-eval "$(starship init zsh)"
 
 if [[ $(uname) == "Darwin" ]]; then
   [[ ! -r '/Users/frankrogalski/.opam/opam-init/init.zsh' ]] || source '/Users/frankrogalski/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null

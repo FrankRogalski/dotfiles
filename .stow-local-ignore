@@ -2,7 +2,7 @@
 README.md
 wisdom.nu
 .gitignore
-.updater.sh
+updater.sh
 logs
 copy_bookmarks.py
-.clean-hog.py
+clean-hog.py
