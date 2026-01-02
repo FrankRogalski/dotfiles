@@ -166,5 +166,29 @@ else
   . "$HOME/.local/bin/env"
 fi
 
+# If the line isn't a known command, treat it as a zoxide query.
+_zshrc_accept_line() {
+  local buffer="$BUFFER"
+  local -a words
+  words=(${(z)buffer})
+  local cmd="${words[1]}"
+  if [[ -n "$cmd" && "$cmd" != */* && "$cmd" != -* ]]; then
+    if ! whence -w -- "$cmd" >/dev/null 2>&1 && command -v zoxide >/dev/null 2>&1; then
+      local match
+      match="$(zoxide query -l -- "${words[@]}" 2>/dev/null | head -n 1)"
+      if [[ -n "$match" ]]; then
+        BUFFER="cd ${(q)match}"
+      fi
+    fi
+  fi
+  zle .accept-line
+}
+zle -N accept-line _zshrc_accept_line
+
+# Disable numeric directory stack aliases from OMZ (e.g., `2` -> `cd -2`).
+unalias 0 1 2 3 4 5 6 7 8 9 2>/dev/null
+
+unsetopt auto_cd
+
 # syntax highlighting (must be at end of .zshrc)
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
