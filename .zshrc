@@ -1,7 +1,7 @@
 unsetopt PROMPT_SP
 autoload -U colors && colors
 if [[ $(uname) == "Darwin" ]]; then
-  export PATH="$HOME/.local/bin:$HOME/.nimble/bin:/opt/homebrew/opt/perl/bin:$HOME/perl5/bin:/opt/homebrew/lib/ruby/gems/3.4.0/bin:/opt/homebrew/opt/ruby/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$PATH"
+  export PATH="$HOME/.local/bin:$HOME/.nimble/bin:/opt/homebrew/opt/perl/bin:$HOME/perl5/bin:/opt/homebrew/lib/ruby/gems/3.4.0/bin:/opt/homebrew/opt/ruby/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$HOME/go/bin:$PATH"
   export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
   export PERL5LIB="$HOME/perl5/lib/perl5:$PERL5LIB"
   export LIBRARY_PATH="$LIBRARY_PATH:/opt/local/lib/"
@@ -14,10 +14,10 @@ if [[ $(uname) == "Darwin" ]]; then
   alias steplog='/Users/frankrogalski/Privat/python/steplog/main.py -p "`cat ~/steppass.txt`"'
   function _delete_logs() {
     if [[ -o rm_star_silent ]]; then
-      rm -f ~/dotfiles/logs/*
+      rm -f ~/dotfiles/logs/*(N)
     else
       setopt rm_star_silent
-      rm -f ~/dotfiles/logs/*
+      rm -f ~/dotfiles/logs/*(N)
       unsetopt rm_star_silent
     fi
   }
@@ -25,7 +25,7 @@ if [[ $(uname) == "Darwin" ]]; then
     _delete_logs
     zellij --layout "updates"
     for file in ~/dotfiles/logs/*(.N); do
-      printf '%s==> %s <==%s\n' "$fg_bold[green]" "$file" "$reset_color"
+      printf '%s==> %s <==%s\n' "$fg_bold[green]" `basename "$file" '.log'` "$reset_color"
       cat "$file"
     done
     _delete_logs
@@ -172,12 +172,22 @@ _zshrc_accept_line() {
   local -a words
   words=(${(z)buffer})
   local cmd="${words[1]}"
-  if [[ -n "$cmd" && "$cmd" != */* && "$cmd" != -* ]]; then
-    if ! whence -w -- "$cmd" >/dev/null 2>&1 && command -v zoxide >/dev/null 2>&1; then
-      local match
-      match="$(zoxide query -l -- "${words[@]}" 2>/dev/null | head -n 1)"
-      if [[ -n "$match" ]]; then
-        BUFFER="cd ${(q)match}"
+  if [[ -n "$cmd" && "$cmd" != -* ]]; then
+    if ! whence -w -- "$cmd" >/dev/null 2>&1; then
+      if (( ${#words} == 1 )); then
+        local expanded="${~cmd}"
+        if [[ -d "$expanded" ]]; then
+          BUFFER="cd ${(q)cmd}"
+          zle .accept-line
+          return
+        fi
+      fi
+      if [[ "$cmd" != */* && $(command -v zoxide) ]]; then
+        local match
+        match="$(zoxide query -l -- "${words[@]}" 2>/dev/null | head -n 1)"
+        if [[ -n "$match" ]]; then
+          BUFFER="cd ${(q)match}"
+        fi
       fi
     fi
   fi

@@ -1,7 +1,13 @@
+if [ $# -lt 2 ]; then
+    echo "usage: $0 <name> <command...>"
+    exit 1
+fi
+
+FILENAME="$1"
+shift
 INPUT="$*"
-FILENAME=${INPUT//[^[:alpha:]]/}
 mkdir -p "$HOME/dotfiles/logs"
-LOGFILE=${LOGFILE:-"$HOME/dotfiles/logs/$FILENAME-updater.log"}
+LOGFILE="$HOME/dotfiles/logs/$FILENAME-updater.log"
 exec > >(tee "$LOGFILE") 2>&1
 
 eval "$INPUT"
