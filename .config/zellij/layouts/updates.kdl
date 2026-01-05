@@ -11,7 +11,6 @@ layout {
                     brew update
                     echo 'upgrading brew'
                     brew upgrade
-                    brew upgrade --cask claude-code
                     echo 'brew cleanup'
                     brew cleanup --prune=all"#
                 close_on_exit true
@@ -53,19 +52,6 @@ layout {
                 args "updater.sh" "ruby" "gem update"
                 close_on_exit true
             }
-            pane {
-                name "go"
-                command "zsh"
-                args "updater.sh" "go" r#"
-                    for bin in $(ls "$(go env GOPATH)/bin"); do
-                        mod_path=$(go version -m "$(go env GOPATH)/bin/$bin" 2>/dev/null | awk '/^\s+path/ {print $2}')
-                        if [ -n "$mod_path" ]; then
-                            echo "Updating $mod_path"
-                            go install "$mod_path@latest"
-                        fi
-                    done"#
-                close_on_exit true
-            }
         }
         pane split_direction="horizontal" {
             pane {
@@ -74,18 +60,33 @@ layout {
                 args "-i" "updater.sh" "oh-my-zsh" "omz update"
                 close_on_exit true
             }
-            pane {
-                name "Compute bound"
-                command "zsh"
-                args "updater.sh" "compute-bound" r#"
-                    echo 'Copying bookmarks'
-                    uv run copy_bookmarks.py
-                    echo 'Cleaning mailhog log'
-                    uv run clean-hog.py
-                    echo 'deleting old uv cache'
-                    find ~/.cache/uv -type f -mtime +30 -delete
-                    find ~/.cache/uv -type d -empty -delete"#
-                close_on_exit true
+            pane stacked=true {
+                pane {
+                    name "Compute bound"
+                    command "zsh"
+                    args "updater.sh" "compute-bound" r#"
+                        echo 'Copying bookmarks'
+                        uv run copy_bookmarks.py
+                        echo 'Cleaning mailhog log'
+                        uv run clean-hog.py
+                        echo 'deleting old uv cache'
+                        find ~/.cache/uv -type f -mtime +30 -delete
+                        find ~/.cache/uv -type d -empty -delete"#
+                    close_on_exit true
+                }
+                pane {
+                    name "go"
+                    command "zsh"
+                    args "updater.sh" "go" r#"
+                        for bin in $(ls "$(go env GOPATH)/bin"); do
+                            mod_path=$(go version -m "$(go env GOPATH)/bin/$bin" 2>/dev/null | awk '/^\s+path/ {print $2}')
+                            if [ -n "$mod_path" ]; then
+                                echo "Updating $mod_path"
+                                go install "$mod_path@latest"
+                            fi
+                        done"#
+                    close_on_exit true
+                }
             }
             pane {
                 name "update uv tools"
