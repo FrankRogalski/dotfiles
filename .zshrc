@@ -25,11 +25,11 @@ if [[ $(uname) == "Darwin" ]]; then
     _delete_logs
     zellij --layout "updates"
     for file in ~/dotfiles/logs/*(.N); do
-      printf '%s==> %s <==%s\n' "$fg_bold[green]" `basename "$file" '.log'` "$reset_color"
+      printf '\n%s==> %s <==%s\n' "$fg_bold[green]" `basename "$file" '.log'` "$reset_color"
       cat "$file"
     done
     _delete_logs
-    echo "Update finished"
+      printf '\n%s==> %s <==%s\n' "$fg_bold[green]" "Update finished" "$reset_color"
   }
   alias git-diff=~/scripts/bash/diff.nu
 else
