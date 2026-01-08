@@ -198,7 +198,7 @@ zle -N accept-line _zshrc_accept_line
 # Disable numeric directory stack aliases from OMZ (e.g., `2` -> `cd -2`).
 unalias 0 1 2 3 4 5 6 7 8 9 2>/dev/null
 
-unsetopt auto_cd
+setopt auto_cd
 
 # syntax highlighting (must be at end of .zshrc)
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
