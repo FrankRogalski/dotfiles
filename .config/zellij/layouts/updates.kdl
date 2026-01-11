@@ -29,7 +29,7 @@ layout {
             pane {
                 name "node"
                 command "zsh"
-                args "updater.sh" "node" "npm update -g"
+                args "updater.sh" "node" "npm update -g; npm outdated -g"
                 close_on_exit true
             }
         }
@@ -79,11 +79,15 @@ layout {
                     command "zsh"
                     args "updater.sh" "go" r#"
                         for bin in $(ls "$(go env GOPATH)/bin"); do
-                            mod_path=$(go version -m "$(go env GOPATH)/bin/$bin" 2>/dev/null | awk '/^\s+path/ {print $2}')
+                            echo "looking for updates for $bin"
+                            mod_path=$(go version -m "$(go env GOPATH)/bin/$bin" 2>/dev/null | awk '$1 == "path" {print $2}')
                             if [ -n "$mod_path" ]; then
                                 echo "Updating $mod_path"
                                 go install "$mod_path@latest"
+                            else
+                                echo "nothing to update for $bin"
                             fi
+                            echo
                         done"#
                     close_on_exit true
                 }
