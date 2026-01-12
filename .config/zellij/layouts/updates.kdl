@@ -12,7 +12,9 @@ layout {
                     echo 'upgrading brew'
                     brew upgrade
                     echo 'brew cleanup'
-                    brew cleanup --prune=all"#
+                    brew cleanup --prune=all
+                    echo 'brew autoremove'
+                    brew autoremove"#
                 close_on_exit true
             }
             pane {
@@ -29,7 +31,13 @@ layout {
             pane {
                 name "node"
                 command "zsh"
-                args "updater.sh" "node" "npm update -g; npm outdated -g"
+                args "updater.sh" "node" r#"
+                    echo "updating node"
+                    npm update -g
+                    echo "cleaning cache"
+                    npm cache clean --force
+                    echo "listing old versions"
+                    npm outdated -g"#
                 close_on_exit true
             }
         }
@@ -71,7 +79,11 @@ layout {
                         uv run clean-hog.py
                         echo 'deleting old uv cache'
                         find ~/.cache/uv -type f -mtime +30 -delete
-                        find ~/.cache/uv -type d -empty -delete"#
+                        find ~/.cache/uv -type d -empty -delete
+                        if command -v docker &>/dev/null && docker info &>/dev/null; then
+                            echo 'docker cleanup (unused resources older than 30 days)'
+                            docker system prune -af --filter 'until=720h'
+                        fi"#
                     close_on_exit true
                 }
                 pane {
