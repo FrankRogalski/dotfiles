@@ -5,7 +5,6 @@ if [[ $(uname) == "Darwin" ]]; then
   export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
   export PERL5LIB="$HOME/perl5/lib/perl5:$PERL5LIB"
   export LIBRARY_PATH="$LIBRARY_PATH:/opt/local/lib/"
-  export JAVA_HOME="/Users/frankrogalski/Library/Java/JavaVirtualMachines/sapmachine-17.0.11/Contents/Home"
   export DISABLE_AUTOUPDATER=1
   fpath+=('/opt/homebrew/share/zsh/site-functions')
   alias s=~/scripts/bash/shortcuts.nu
@@ -57,10 +56,15 @@ plugins=(git brew jira web-search zsh-autosuggestions)
 source $ZSH/oh-my-zsh.sh
 
 export PATH="$HOME/.jenv/bin:$PATH"
-jenv() {
+function jenv() {
   unfunction jenv
   eval "$(command jenv init -)"
   jenv "$@"
+}
+function java() {
+  unfunction java
+  eval "$(command jenv init -)"
+  java "$@"
 }
 
 export MANPATH="/usr/local/man:$MANPATH"
