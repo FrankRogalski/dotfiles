@@ -1,4 +1,3 @@
-unsetopt PROMPT_SP
 autoload -U colors && colors
 if [[ $(uname) == "Darwin" ]]; then
   export PATH="$HOME/.local/bin:$HOME/.nimble/bin:/opt/homebrew/opt/perl/bin:$HOME/perl5/bin:/opt/homebrew/lib/ruby/gems/3.4.0/bin:/opt/homebrew/opt/ruby/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$HOME/go/bin:$PATH"
@@ -54,18 +53,10 @@ ZSH_DISABLE_COMPFIX=true
 
 plugins=(git brew jira web-search zsh-autosuggestions)
 source $ZSH/oh-my-zsh.sh
+source ~/.zsh-defer/zsh-defer.plugin.zsh
 
 export PATH="$HOME/.jenv/bin:$PATH"
-function jenv() {
-  unfunction jenv
-  eval "$(command jenv init -)"
-  jenv "$@"
-}
-function java() {
-  unfunction java
-  eval "$(command jenv init -)"
-  java "$@"
-}
+zsh-defer eval "$(jenv init -)"
 
 export MANPATH="/usr/local/man:$MANPATH"
 export LANG=en_US.UTF-8
@@ -78,11 +69,7 @@ setopt HIST_IGNORE_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
-fuck() {
-  unfunction fuck
-  eval $(command thefuck --alias)
-  fuck "$@"
-}
+zsh-defer eval $(thefuck --alias)
 alias pip="py -m pip"
 alias reload=". ~/.zshrc"
 alias vim=nvim
