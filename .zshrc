@@ -126,12 +126,8 @@ datecalc() {
   py -c "from datetime import datetime as dt, timedelta as td; print($1)"
 }
 
-is_discrete_scroll_running() {
-    pgrep -x "DiscreteScroll" >/dev/null
-}
-
 stop_discrete_scroll() {
-  if is_discrete_scroll_running; then
+  if pgrep -x "DiscreteScroll" >/dev/null; then
     pkill -TERM -x "DiscreteScroll"
     echo "DiscreteScroll sent SIGTERM."
   else
