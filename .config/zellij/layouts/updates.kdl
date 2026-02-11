@@ -21,6 +21,7 @@ layout {
                 name "cargo"
                 command "zsh"
                 args "updater.sh" "cargo" r#"
+                    set -e
                     export OPENSSL_DIR="$(brew --prefix openssl@3)"
                     export PKG_CONFIG_PATH="$(brew --prefix libgit2)/lib/pkgconfig:${OPENSSL_DIR}/lib/pkgconfig"
                     export LIBGIT2_NO_VENDOR=1
@@ -32,6 +33,7 @@ layout {
                 name "node"
                 command "zsh"
                 args "updater.sh" "node" r#"
+                    set -e
                     echo "updating node"
                     npm update -g
                     echo "cleaning cache"
@@ -73,6 +75,7 @@ layout {
                     name "Compute bound"
                     command "zsh"
                     args "updater.sh" "compute-bound" r#"
+                        set -e
                         echo 'Updating zsh-defer'
                         git -C ~/.zsh-defer pull --ff-only
                         echo 'Copying bookmarks'
