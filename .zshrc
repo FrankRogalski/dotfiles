@@ -57,22 +57,48 @@ source ~/.zsh-defer/zsh-defer.plugin.zsh
 
 source ~/dotfiles/session.sh
 zmodload zsh/system
-_adt_pw_pipe=$(mktemp -u)
-mkfifo -m 600 "$_adt_pw_pipe"
-bw get password 'h4e 10er' > "$_adt_pw_pipe" &!
-sysopen -r -o nonblock -u _adt_pw_fd "$_adt_pw_pipe"
-_poll_adt_password() {
-  local buf
-  if sysread -i $_adt_pw_fd buf 2>/dev/null && [[ -n "$buf" ]]; then
-    export ADT_PASSWORD="${buf%$'\n'}"
-    exec {_adt_pw_fd}<&-
-    rm -f "$_adt_pw_pipe"
-    unset _adt_pw_pipe _adt_pw_fd
-    add-zsh-hook -d precmd _poll_adt_password
-    unfunction _poll_adt_password 2>/dev/null
-  fi
-}
-add-zsh-hook precmd _poll_adt_password
+if [[ -o interactive ]]; then
+  # Async without zle callbacks: poll non-blocking around prompts/commands.
+  exec {_adt_pw_fd}< <(bw get password 'h4e 10er' </dev/null 2>/dev/null)
+
+  _adt_pw_cleanup() {
+    [[ -n "${_adt_pw_fd:-}" ]] && exec {_adt_pw_fd}<&-
+    unset _adt_pw_fd
+    add-zsh-hook -d precmd _adt_pw_poll
+    add-zsh-hook -d preexec _adt_pw_preexec
+    unfunction _adt_pw_cleanup _adt_pw_poll _adt_pw_preexec _adt_pw_try_read 2>/dev/null
+  }
+
+  _adt_pw_try_read() {
+    local pw
+    [[ -n "${_adt_pw_fd:-}" ]] || return 1
+    # non-blocking read; returns immediately if not ready
+    if sysread -i "$_adt_pw_fd" -t 0 pw 2>/dev/null && [[ -n "$pw" ]]; then
+      export ADT_PASSWORD="${pw%$'\n'}"
+      _adt_pw_cleanup
+      return 0
+    fi
+    return 1
+  }
+
+  _adt_pw_poll() {
+    _adt_pw_try_read || true
+  }
+
+  _adt_pw_preexec() {
+    [[ -n "${ADT_PASSWORD:-}" ]] && return
+    _adt_pw_try_read && return
+    if [[ "$1" == adtfs* ]]; then
+      local pw
+      pw="$(bw get password 'h4e 10er' </dev/null 2>/dev/null)" || return
+      [[ -n "$pw" ]] && export ADT_PASSWORD="${pw%$'\n'}"
+      _adt_pw_cleanup
+    fi
+  }
+
+  add-zsh-hook precmd _adt_pw_poll
+  add-zsh-hook preexec _adt_pw_preexec
+fi
 
 export PATH="$HOME/.jenv/bin:$PATH"
 zsh-defer eval "$(jenv init -)"
