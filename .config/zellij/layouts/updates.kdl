@@ -67,7 +67,7 @@ layout {
             pane {
                 name "Oh my zsh"
                 command "zsh"
-                args "-i" "updater.sh" "oh-my-zsh" "omz update"
+                args "updater.sh" "oh-my-zsh" r#"ZSH="$HOME/.oh-my-zsh" "$HOME/.oh-my-zsh/tools/upgrade.sh""#
                 close_on_exit true
             }
             pane stacked=true {

@@ -8,7 +8,7 @@ if [[ $(uname) == "Darwin" ]]; then
   fpath+=('/opt/homebrew/share/zsh/site-functions')
   alias s=~/scripts/bash/shortcuts.nu
   alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
-  alias py=python3
+  alias py='uv run -w numpy -w requests python'
   alias steplog='/Users/frankrogalski/Privat/python/steplog/main.py -p "`cat ~/steppass.txt`"'
   function _delete_logs() {
     if [[ -o rm_star_silent ]]; then
@@ -115,7 +115,6 @@ setopt HIST_SAVE_NO_DUPS
 setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
 zsh-defer eval $(thefuck --alias)
-alias pip="py -m pip"
 alias reload=". ~/.zshrc"
 alias vim=nvim
 alias vi=nvim

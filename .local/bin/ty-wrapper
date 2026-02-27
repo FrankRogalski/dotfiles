@@ -18,10 +18,12 @@ if [[ -n "$helix_cwd" && -n "$last_hx" ]]; then
     fi
     
     if [[ -f "$script_path" ]] && head -20 "$script_path" | grep -q '# /// script'; then
-        tmp=$(mktemp /tmp/pep723.XXXXXX.py)
+        tmp=$(mktemp /tmp/pep723_XXXXXX)
+        mv "$tmp" "${tmp}.py"
+        tmp="${tmp}.py"
         sed -n '/^# \/\/\/ script/,/^# \/\/\/$/p' "$script_path" > "$tmp"
         echo 'import sys; print(sys.prefix)' >> "$tmp"
-        
+
         VIRTUAL_ENV=$(cd "$helix_cwd" && uv run "$tmp" 2>/dev/null)
         rm -f "$tmp"
         
