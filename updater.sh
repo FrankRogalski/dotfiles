@@ -16,7 +16,10 @@ STATUS=$?
 set -u
 if [ $STATUS -eq 0 ]; then
     echo 'update finished'
-    sleep 2
+    UPDATER_COUNT=$(pgrep -f 'updater\.sh' | grep -c '' || echo 1)
+    if [ "$UPDATER_COUNT" -gt 1 ]; then
+        sleep 2
+    fi
 else
     echo "FAILED ($STATUS) — pane stays open"
     exec $SHELL
