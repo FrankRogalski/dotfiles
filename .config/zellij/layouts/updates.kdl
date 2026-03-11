@@ -34,12 +34,10 @@ layout {
                 command "zsh"
                 args "updater.sh" "node" r#"
                     set -e
-                    echo "updating node"
-                    npm update -g
                     echo "cleaning cache"
                     npm cache clean --force
-                    echo "listing old versions"
-                    npm outdated -g"#
+                    echo "updating node"
+                    npm update -g"#
                 close_on_exit true
             }
         }
