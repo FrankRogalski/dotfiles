@@ -31,6 +31,7 @@ if [[ $(uname) == "Darwin" ]]; then
       printf '\n%s==> %s <==%s\n' "$fg_bold[green]" "Update finished" "$reset_color"
   }
   alias git-diff=~/scripts/bash/diff.nu
+  alias whatsnew='~/privat/python/news/releases.py'
 else
   alias update='sudo pacman -Syu && yay -Syu --answerclean All --answerdiff None && cargo install-update -a && rustup update stable && omz update'
   alias hx=helix

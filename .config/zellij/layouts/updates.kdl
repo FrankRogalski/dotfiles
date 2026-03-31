@@ -54,11 +54,19 @@ layout {
                 args "updater.sh" "tldr" "tldr -u"
                 close_on_exit true
             }
-            pane {
-                name "ruby"
-                command "zsh"
-                args "updater.sh" "ruby" "gem update"
-                close_on_exit true
+            pane stacked=true {
+                pane {
+                    name "ruby"
+                    command "zsh"
+                    args "updater.sh" "ruby" "gem update"
+                    close_on_exit true
+                }
+                pane {
+                    name "copilot"
+                    command "zsh"
+                    args "updater.sh" "copilot" " copilot update"
+                    close_on_exit true
+                }
             }
         }
         pane split_direction="horizontal" {
@@ -81,7 +89,8 @@ layout {
                         echo 'Cleaning mailhog log'
                         uv run clean-hog.py
                         echo 'deleting old uv cache'
-                        find ~/.cache/uv -type f -mtime +30 -delete
+                        find ~/.cache/uv/environments-v2 -mindepth 1 -maxdepth 1 -type d -mtime +30 -exec rm -rf {} +
+                        find ~/.cache/uv -not -path '*/environments-v2/*' -type f -mtime +30 -delete
                         find ~/.cache/uv -type d -empty -delete
                         if command -v docker &>/dev/null && docker info &>/dev/null; then
                             echo 'docker cleanup (unused resources older than 30 days)'
