@@ -9,6 +9,9 @@ layout {
                     set -e
                     echo 'Updating brew'
                     brew update
+                    for pipe in "$HOME/dotfiles/logs"/brew-wait-*; do
+                        [ -p "$pipe" ] && echo "ready" > "$pipe" &
+                    done
                     echo 'upgrading brew'
                     brew upgrade
                     echo 'brew cleanup'
@@ -22,6 +25,15 @@ layout {
                 command "zsh"
                 args "updater.sh" "cargo" r#"
                     set -e
+                    BREW_PIPE="$HOME/dotfiles/logs/brew-wait-cargo"
+                    mkfifo "$BREW_PIPE" 2>/dev/null || true
+                    read < "$BREW_PIPE"
+                    rm -f "$BREW_PIPE"
+                    if brew outdated --quiet 2>/dev/null | grep -qE '^(openssl@3|libgit2)$'; then
+                        echo 'brew deps outdated — waiting for brew upgrade...'
+                        until grep -q 'update finished\|FAILED' "$HOME/dotfiles/logs/brew-updater.log" 2>/dev/null; do sleep 2; done
+                        echo 'brew done'
+                    fi
                     export OPENSSL_DIR="$(brew --prefix openssl@3)"
                     export PKG_CONFIG_PATH="$(brew --prefix libgit2)/lib/pkgconfig:${OPENSSL_DIR}/lib/pkgconfig"
                     export LIBGIT2_NO_VENDOR=1
@@ -34,10 +46,30 @@ layout {
                 command "zsh"
                 args "updater.sh" "node" r#"
                     set -e
+                    BREW_PIPE="$HOME/dotfiles/logs/brew-wait-node"
+                    mkfifo "$BREW_PIPE" 2>/dev/null || true
+                    read < "$BREW_PIPE"
+                    rm -f "$BREW_PIPE"
+                    if brew outdated --quiet 2>/dev/null | grep -qE '^node(@|$)'; then
+                        echo 'node outdated in brew — waiting for brew upgrade...'
+                        until grep -q 'update finished\|FAILED' "$HOME/dotfiles/logs/brew-updater.log" 2>/dev/null; do sleep 2; done
+                        echo 'brew done'
+                    fi
                     echo "cleaning cache"
                     npm cache clean --force
                     echo "updating node"
-                    npm update -g"#
+                    BEFORE=$(npm ls -g --depth=0 --json 2>/dev/null)
+                    npm update -g
+                    AFTER=$(npm ls -g --depth=0 --json 2>/dev/null)
+                    echo ""
+                    echo "=== upgraded packages ==="
+                    node -e "
+                        const b = JSON.parse(process.argv[1]).dependencies || {};
+                        const a = JSON.parse(process.argv[2]).dependencies || {};
+                        const upgraded = Object.keys(a).filter(k => b[k] && b[k].version !== a[k].version);
+                        if (upgraded.length === 0) console.log('(none)');
+                        else upgraded.forEach(k => console.log(k + ': ' + b[k].version + ' -> ' + a[k].version));
+                    " "$BEFORE" "$AFTER""#
                 close_on_exit true
             }
         }
@@ -64,7 +96,7 @@ layout {
                 pane {
                     name "copilot"
                     command "zsh"
-                    args "updater.sh" "copilot" " copilot update"
+                    args "updater.sh" "copilot" "copilot update"
                     close_on_exit true
                 }
             }
@@ -88,10 +120,6 @@ layout {
                         uv run copy_bookmarks.py
                         echo 'Cleaning mailhog log'
                         uv run clean-hog.py
-                        echo 'deleting old uv cache'
-                        find ~/.cache/uv/environments-v2 -mindepth 1 -maxdepth 1 -type d -mtime +30 -exec rm -rf {} +
-                        find ~/.cache/uv -not -path '*/environments-v2/*' -type f -mtime +30 -delete
-                        find ~/.cache/uv -type d -empty -delete
                         if command -v docker &>/dev/null && docker info &>/dev/null; then
                             echo 'docker cleanup (unused resources older than 30 days)'
                             docker system prune -af --filter 'until=720h'
@@ -108,7 +136,13 @@ layout {
             pane {
                 name "update uv tools"
                 command "zsh"
-                args "updater.sh" "uv-tools" r#"echo "$(uv tool list | rg -o '^\w+')" | xargs uv tool upgrade"#
+                args "updater.sh" "uv-tools" r#"
+                    set -e
+                    uv tool upgrade --all
+                    echo 'deleting old uv cache'
+                    find ~/.cache/uv/environments-v2 -mindepth 1 -maxdepth 1 -type d -mtime +30 -exec rm -rf {} + 2>/dev/null || true
+                    find ~/.cache/uv -not -path '*/environments-v2/*' -type f -mtime +30 -delete 2>/dev/null || true
+                    find ~/.cache/uv -type d -empty -delete 2>/dev/null || true"#
                 close_on_exit true
             }
         }

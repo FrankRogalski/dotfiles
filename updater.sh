@@ -16,7 +16,7 @@ STATUS=$?
 set -u
 if [ $STATUS -eq 0 ]; then
     echo 'update finished'
-    UPDATER_COUNT=$(pgrep -f 'updater\.sh' | grep -c '' || echo 1)
+    UPDATER_COUNT=$(pgrep -cf 'updater\.sh' 2>/dev/null || echo 0)
     if [ "$UPDATER_COUNT" -gt 1 ]; then
         sleep 2
     fi
