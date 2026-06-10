@@ -80,11 +80,19 @@ layout {
                 args "updater.sh" "rust" "rustup update stable"
                 close_on_exit true
             }
-            pane {
-                name "tldr"
-                command "zsh"
-                args "updater.sh" "tldr" "tldr -u"
-                close_on_exit true
+            pane stacked=true {
+                pane {
+                    name "tldr"
+                    command "zsh"
+                    args "updater.sh" "tldr" "tldr -u"
+                    close_on_exit true
+                }
+                pane {
+                    name "claude"
+                    command "zsh"
+                    args "updater.sh" "claude" "claude update"
+                    close_on_exit true
+                }
             }
             pane stacked=true {
                 pane {

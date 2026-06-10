@@ -109,7 +109,7 @@ export MANPATH="/usr/local/man:$MANPATH"
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-export EDITOR='nvim'
+export EDITOR='hx'
 
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_DUPS
