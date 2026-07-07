@@ -124,6 +124,8 @@ layout {
                         set -e
                         echo 'Updating zsh-defer'
                         git -C ~/.zsh-defer pull --ff-only
+                        echo 'Updating clockify-mcp-server'
+                        git -C ~/Privat/clockify-mcp-server pull --ff-only
                         echo 'Copying bookmarks'
                         uv run copy_bookmarks.py
                         echo 'Cleaning mailhog log'

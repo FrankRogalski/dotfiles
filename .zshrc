@@ -11,6 +11,7 @@ if [[ $(uname) == "Darwin" ]]; then
   alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
   alias py='uv run -w numpy -w requests python'
   alias steplog='/Users/frankrogalski/Privat/python/steplog/main.py -p "`cat ~/steppass.txt`"'
+  alias copilot='copilot --yolo'
   function _delete_logs() {
     if [[ -o rm_star_silent ]]; then
       rm -f ~/dotfiles/logs/*(N)
@@ -21,6 +22,15 @@ if [[ $(uname) == "Darwin" ]]; then
     fi
   }
   function update() {
+    setopt localoptions localtraps
+    local lockfile="${TMPDIR:-/tmp}/dotfiles_update.lock"
+    if [[ -f "$lockfile" ]] && kill -0 "$(cat "$lockfile" 2>/dev/null)" 2>/dev/null; then
+      echo "update is already running (pid $(cat "$lockfile"))."
+      return 1
+    fi
+    echo $$ > "$lockfile"
+    trap 'rm -f "$lockfile"' EXIT INT TERM
+
     _delete_logs
     zellij --layout "updates"
     for file in ~/dotfiles/logs/*(.N); do
@@ -28,7 +38,7 @@ if [[ $(uname) == "Darwin" ]]; then
       cat "$file"
     done
     _delete_logs
-      printf '\n%s==> %s <==%s\n' "$fg_bold[green]" "Update finished" "$reset_color"
+    printf '\n%s==> %s <==%s\n' "$fg_bold[green]" "Update finished" "$reset_color"
   }
   alias git-diff=~/scripts/bash/diff.nu
   alias whatsnew='~/privat/python/news/releases.py'
