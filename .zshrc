@@ -1,11 +1,11 @@
 autoload -U colors && colors
 if [[ $(uname) == "Darwin" ]]; then
-  export PATH="$HOME/.local/bin:$HOME/.nimble/bin:/opt/homebrew/opt/perl/bin:$HOME/perl5/bin:/opt/homebrew/lib/ruby/gems/3.4.0/bin:/opt/homebrew/opt/ruby/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$HOME/go/bin:$PATH"
+  export PATH="$HOME/.local/bin:$HOME/.nimble/bin:/opt/homebrew/opt/perl/bin:$HOME/perl5/bin:$HOME/.gem/bin:/opt/homebrew/opt/ruby/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frankrogalski/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$HOME/go/bin:$PATH"
   export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
   export PERL5LIB="$HOME/perl5/lib/perl5:$PERL5LIB"
   export LIBRARY_PATH="$LIBRARY_PATH:/opt/local/lib/"
   export DISABLE_AUTOUPDATER=1
-  export DOTNET_ROOT=$"fd libexec /opt/homebrew/Cellar/dotnet"
+  export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
   fpath+=('/opt/homebrew/share/zsh/site-functions')
   alias s=~/scripts/bash/shortcuts.nu
   alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
@@ -116,10 +116,7 @@ export PATH="$HOME/.jenv/bin:$PATH"
 zsh-defer eval "$(jenv init -)"
 
 export MANPATH="/usr/local/man:$MANPATH"
-export LANG=en_US.UTF-8
-export LANGUAGE=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-export EDITOR='hx'
+# EDITOR + LANG/LANGUAGE/LC_ALL moved to ~/.zshenv (needed by non-interactive shells too)
 
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_DUPS
