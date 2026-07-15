@@ -7,6 +7,9 @@ layout {
                 command "zsh"
                 args "updater.sh" "brew" r#"
                     set -e
+                    # Skip self-updating casks (chatgpt, cursor, zed, postman, ...)
+                    # so their in-app updaters own it and don't fail the pane.
+                    export HOMEBREW_NO_UPGRADE_AUTO_UPDATES_CASKS=1
                     echo 'Updating brew'
                     brew update
                     for pipe in "$HOME/dotfiles/logs"/brew-wait-*; do
