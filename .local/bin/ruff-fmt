@@ -1,0 +1,24 @@
+#!/bin/bash
+# Helix accepts exactly one formatter command, but `ruff format` only rewrites
+# layout — it never touches lint findings, so unused imports and unsorted
+# imports survive a save and the LSP keeps flagging them. Chain the fixer into
+# the formatter so one save settles both.
+#
+# $1 is the buffer path (passed as %{buffer_name}); ruff needs it to locate the
+# right pyproject.toml and to tell first-party imports from third-party ones.
+#
+# To stop this from deleting an import you haven't used yet, narrow the fixer:
+#   ruff check --fix-only --select I --quiet ...   # sort imports, delete nothing
+set -o pipefail
+
+name=${1:-stdin.py}
+
+# `ruff format` exits 2 and prints nothing on a syntax error; pipefail turns
+# that into a non-zero exit here, so Helix reports it and leaves the buffer
+# alone instead of replacing it with the empty output.
+formatted=$(ruff check --fix-only --quiet --stdin-filename "$name" - |
+  ruff format --quiet --stdin-filename "$name" -) || exit 1
+
+# The command substitution ate the trailing newline; put exactly one back.
+[[ -n $formatted ]] && printf '%s\n' "$formatted"
+exit 0

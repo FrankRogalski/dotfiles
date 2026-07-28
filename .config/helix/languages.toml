@@ -8,7 +8,10 @@ args = ["server"]
 [[language]]
 name = "python"
 auto-format = true
-formatter = { command = "ruff", args = ["format", "-"] }
+# `ruff format` alone leaves every lint fix on the table — unsorted imports
+# (I001) and unused ones (F401) survive the save and the LSP keeps flagging
+# them. ruff-fmt runs `check --fix-only` first, then formats.
+formatter = { command = "ruff-fmt", args = ["%{buffer_name}"] }
 
 
 [[language]]

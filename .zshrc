@@ -9,7 +9,38 @@ if [[ $(uname) == "Darwin" ]]; then
   fpath+=('/opt/homebrew/share/zsh/site-functions')
   alias s=~/scripts/bash/shortcuts.nu
   alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
-  alias py='uv run -w numpy -w requests python'
+  # Packages injected when a script brings no inline metadata of its own.
+  py_default_with=(numpy requests)
+  # uv only honours a PEP 723 header when the script *is* the run target, so
+  # `uv run --with ... python script.py` silently ignores its dependencies.
+  # Sniff the header and pick the right form. Pure zsh, no fork, and it stops
+  # after the first 30 lines rather than reading the whole file.
+  function _py_has_pep723() {
+    local line
+    local -i n=0
+    while IFS= read -r line; do
+      [[ $line == '# /// script'(|[[:space:]]*) ]] && return 0
+      (( ++n >= 30 )) && return 1
+    done <$1
+    return 1
+  }
+  function py() {
+    if [[ $1 == *.py && -r $1 ]] && _py_has_pep723 $1; then
+      uv run --script "$@"
+    else
+      uv run ${py_default_with[@]/#/--with=} python "$@"
+    fi
+  }
+  # ty can't read a PEP 723 header, so ty-wrapper hands it uv's env for the
+  # script. Name the file here instead: the shell knows exactly what is being
+  # opened, so the wrapper needn't guess it back out of ~/.zsh_history.
+  function hx() {
+    if [[ $1 == *.py && -r $1 ]] && _py_has_pep723 $1; then
+      PEP723_SCRIPT=${1:A} command hx "$@"
+    else
+      command hx "$@"
+    fi
+  }
   alias steplog='/Users/frankrogalski/Privat/python/steplog/main.py -p "`cat ~/steppass.txt`"'
   alias copilot='copilot --yolo'
   function _delete_logs() {
