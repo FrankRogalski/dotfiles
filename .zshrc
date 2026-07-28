@@ -22,23 +22,27 @@ if [[ $(uname) == "Darwin" ]]; then
     fi
   }
   function update() {
-    setopt localoptions localtraps
     local lockfile="${TMPDIR:-/tmp}/dotfiles_update.lock"
-    if [[ -f "$lockfile" ]] && kill -0 "$(cat "$lockfile" 2>/dev/null)" 2>/dev/null; then
-      echo "update is already running (pid $(cat "$lockfile"))."
-      return 1
-    fi
-    echo $$ > "$lockfile"
-    trap 'rm -f "$lockfile"' EXIT INT TERM
+    zmodload zsh/system
+    : >>"$lockfile"
+    # the lock lives on the subshell's fd, so the kernel drops it however we exit
+    (
+      if ! zsystem flock -t 0 "$lockfile" 2>/dev/null; then
+        echo "update is already running (pid $(<"$lockfile"))."
+        exit 1
+      fi
+      local mypid=$sysparams[pid]
+      (print -- $mypid) >|"$lockfile"
 
-    _delete_logs
-    zellij --layout "updates"
-    for file in ~/dotfiles/logs/*(.N); do
-      printf '\n%s==> %s <==%s\n' "$fg_bold[green]" `basename "$file" '.log'` "$reset_color"
-      cat "$file"
-    done
-    _delete_logs
-    printf '\n%s==> %s <==%s\n' "$fg_bold[green]" "Update finished" "$reset_color"
+      _delete_logs
+      zellij --layout "updates"
+      for file in ~/dotfiles/logs/*(.N); do
+        printf '\n%s==> %s <==%s\n' "$fg_bold[green]" `basename "$file" '.log'` "$reset_color"
+        cat "$file"
+      done
+      _delete_logs
+      printf '\n%s==> %s <==%s\n' "$fg_bold[green]" "Update finished" "$reset_color"
+    )
   }
   alias git-diff=~/scripts/bash/diff.nu
   alias whatsnew='~/privat/python/news/releases.py'
