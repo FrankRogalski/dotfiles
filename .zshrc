@@ -52,6 +52,21 @@ if [[ $(uname) == "Darwin" ]]; then
       unsetopt rm_star_silent
     fi
   }
+  # Print a pane log with everything but colour (SGR) escapes removed, so a
+  # replayed log can never switch terminal modes, move the cursor, or set the
+  # title. Carriage-return progress bars collapse to their final state.
+  function _print_log() {
+    perl -pe '
+      s/\r\n/\n/g; s/^.*\r//;                    # keep what survived a CR
+      s/\e\][^\a\e]*(?:\a|\e\\)?//g;              # OSC: titles, hyperlinks
+      s/\e[P^_].*?(?:\e\\|$)//g;                  # DCS/PM/APC strings
+      s/\e\[[0-?]*[ -\/]*[@-ln-~]//g;             # CSI except SGR (...m)
+      s/\e[()*+][ -\/]*[0-~]//g;                  # charset designations
+      s/\e[^\[]//g;                               # other two-byte escapes
+      s/[\x00-\x08\x0b-\x1a\x1c-\x1f\x7f]//g;   # stray control bytes
+    ' -- "$1"
+    printf '\e[0m'
+  }
   function update() {
     local lockfile="${TMPDIR:-/tmp}/dotfiles_update.lock"
     zmodload zsh/system
@@ -67,9 +82,14 @@ if [[ $(uname) == "Darwin" ]]; then
 
       _delete_logs
       zellij --layout "updates"
+      # zellij leaves bracketed paste on when it exits, and a killed pane or
+      # crash can also leave mouse/focus reporting on or the cursor hidden.
+      # Put the terminal back before printing anything into it.
+      printf '\e[?2004l\e[?1004l\e[?1003l\e[?1002l\e[?1000l\e[?1006l\e[?25h\e[0m'
+      stty sane 2>/dev/null
       for file in ~/dotfiles/logs/*(.N); do
         printf '\n%s==> %s <==%s\n' "$fg_bold[green]" `basename "$file" '.log'` "$reset_color"
-        cat "$file"
+        _print_log "$file"
       done
       _delete_logs
       printf '\n%s==> %s <==%s\n' "$fg_bold[green]" "Update finished" "$reset_color"
