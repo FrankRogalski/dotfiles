@@ -131,6 +131,17 @@ layout {
                         uv run copy_bookmarks.py
                         echo 'Cleaning mailhog log'
                         uv run clean-hog.py
+                        # WhatsApp never garbage-collects downloaded status media, and a single
+                        # prolific poster once leaked 24G here. Status expires after 24h, so an
+                        # age window can't destroy anything meant to be kept. Chat media (the
+                        # sibling dirs without a status suffix) is deliberately untouched.
+                        WA_MEDIA="$HOME/Library/Group Containers/group.net.whatsapp.WhatsApp.shared/Message/Media"
+                        if [ -d "$WA_MEDIA" ]; then
+                            echo 'pruning expired WhatsApp status media'
+                            find "$WA_MEDIA" -maxdepth 1 -type d -name '*status' \
+                                -exec find {} -type f -mtime +7 -delete \; 2>/dev/null || true
+                            find "$WA_MEDIA" -mindepth 1 -type d -empty -delete 2>/dev/null || true
+                        fi
                         if command -v docker &>/dev/null && docker info &>/dev/null; then
                             echo 'docker cleanup (unused resources older than 30 days)'
                             docker system prune -af --filter 'until=720h'
@@ -151,8 +162,8 @@ layout {
                     set -e
                     uv tool upgrade --all
                     echo 'deleting old uv cache'
-                    find ~/.cache/uv/environments-v2 -mindepth 1 -maxdepth 1 -type d -mtime +30 -exec rm -rf {} + 2>/dev/null || true
-                    find ~/.cache/uv -not -path '*/environments-v2/*' -type f -mtime +30 -delete 2>/dev/null || true
+                    find ~/.cache/uv/environments-v2 -mindepth 1 -maxdepth 1 -type d -mtime +7 -exec rm -rf {} + 2>/dev/null || true
+                    find ~/.cache/uv -not -path '*/environments-v2/*' -type f -mtime +7 -delete 2>/dev/null || true
                     find ~/.cache/uv -type d -empty -delete 2>/dev/null || true"#
                 close_on_exit true
             }

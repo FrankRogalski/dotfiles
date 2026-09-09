@@ -9,6 +9,7 @@ if [[ $(uname) == "Darwin" ]]; then
   fpath+=('/opt/homebrew/share/zsh/site-functions')
   alias s=~/scripts/bash/shortcuts.nu
   alias bf=/Users/frankrogalski/privat/rust/BrainRust/target/release/brainfuck
+  alias wachat=/Users/frankrogalski/Privat/go/whatsapp/wachat
   # Packages injected when a script brings no inline metadata of its own.
   py_default_with=(numpy requests)
   # uv only honours a PEP 723 header when the script *is* the run target, so
